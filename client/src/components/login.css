@@ -1,0 +1,101 @@
+
+.form-label {
+  margin: 10px;
+}
+
+
+.login{
+  height: 100vh;
+  /* width: 100vw; */
+  /* padding-left: 65vw; */
+  /*padding-top: 10%; */
+  /* position: absolute; */
+  /* top: 50%; */
+  /* -ms-transform: translateY(-50%); */
+  /* transform: translateY(-50%); */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-image : url("https://res.cloudinary.com/dugjheitb/image/upload/v1701343759/WINDALS/ajit-singh-_6lUTo2UfMY-unsplash_b2vpo7.jpg"); */
+  background-color: white;
+  background-image: url("https://res.cloudinary.com/dd8vjmci3/image/upload/v1701692568/windals/mvivspzs1lufnbawmfvo.png");
+  background-repeat: no-repeat;
+  /* background-position: cover; */
+  background-size: cover;
+  background-size: 100vw 100vh;
+  /* padding: 0; */
+  
+}
+
+.bg-light-grey {
+  background-color: #f4f4f4;
+  padding: 20px 20px 20px 20px;
+}
+
+.center-container {
+  text-align: center;
+}
+
+.custom-checkbox-label {
+  position: relative;
+  display: inline-block;
+  padding-left: 25px;
+  cursor: pointer;
+  color: black;
+}
+
+.custom-checkbox {
+  display: none;
+}
+
+.custom-checkbox-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkmark {
+  color: transparent;
+}
+
+.custom-checkbox:checked + .custom-checkbox-icon {
+  border-color: red;
+  background-color: red;
+}
+
+.custom-checkbox:checked + .custom-checkbox-icon .checkmark {
+  color: white;
+}
+
+
+@media (max-width: 768px) {
+  .login {
+    margin-left: 120px;
+    margin-right: auto;
+    width: 80%; 
+  }
+}
+
+
+@media (max-width: 480px) {
+  .login {
+    margin-left: 20px;
+    margin-right: auto;
+    width: 90%; 
+  }
+}
+
+.loginform{
+  /* border: 2px solid black; */
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}

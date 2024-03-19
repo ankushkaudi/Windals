@@ -1,0 +1,11 @@
+.jobreport{
+    margin-top: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input:focus{
+    outline: none;
+}

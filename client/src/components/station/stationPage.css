@@ -1,0 +1,161 @@
+.first_table {
+    width:100%;
+    text-align: center;
+    
+}
+
+.jobsub{
+    margin-bottom: 12vh;
+}
+.fslist{
+    display: flex;
+    
+}
+
+
+.fslist h3{
+    margin: 30px;
+}
+
+
+.reasonmodal{
+    margin-top: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+    background-color: rgb(219, 219, 219);
+    margin-left: 25vw;
+    border: 1px solid black;
+}
+@media (max-width: 768px) {
+    .first_table {
+        width:40%;
+        text-align: center;
+        margin-left: 220px;
+    }
+
+    
+ 
+    
+}
+
+@media (max-width: 480px) {
+    .first_table {
+        width:50%;
+        text-align: center;
+        margin-left: 100px;
+    }
+    
+    .fslist{
+        display: flex;
+        margin-left: 12vw;
+        
+    }
+    
+    .fslist h3{
+        margin: 25px;
+    }
+       
+    
+}
+
+.section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+  }
+  
+  .section-divs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #fff;
+    border: 2px solid purple;
+    cursor: pointer;
+  }
+
+  .popup-Col1 {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    margin-left:20px;
+    padding-left: 5px;
+    padding-Top:5px;
+    padding-bottom:5px;
+    border-style:solid;
+    border-width:2px;
+    border-color:purple;
+    border-radius:10px;
+    margin-top: 10px;
+    background-color: #fff;
+    cursor: pointer;
+    width: 70%;
+  }
+  
+  .popup-Col2 {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    margin-left:2px;
+    padding-left: 5px;
+    padding-Top:5px;
+    padding-bottom:5px;
+    border-style:solid;
+    border-width:2px;
+    border-color:purple;
+    border-radius:10px;
+    margin-top: 10px;
+    background-color: #fff;
+    cursor: pointer;
+    width: 30%;
+  }
+
+  .selected {
+    outline: 4px solid blue;
+  }
+  .color {
+    background-color: yellow;
+}
+
+.modal-container .modal-container-controls .modal-container-close-button{
+    background-color: red;
+    opacity: 0.7;
+    color: white;
+    border-radius: 25px;
+    padding: 10px;
+    border: 0px;
+}
+
+.modal-container .modal-container-controls .modal-container-close-button:hover{
+    opacity: 1;
+    transform: translate3D(0,-1px,0) scale(1.03);
+    cursor: pointer;
+}
+
+.modal-container .modal-container-content{
+    margin: 40px;
+    text-align: justify;
+}
+
+/* Here we define the fixed content */
+.modal-container .modal-container-content .modal-container-content-no-scroll{
+    margin: 30px;
+}
+
+/* Here we define the 'scrollable' content */
+.modal-container .modal-container-content .modal-container-content-scroll{
+    position: absolute;
+    width: auto;
+    height: calc(100% - 140px);
+    overflow-y: auto;
+    margin: 10px 30px 30px 30px;
+    padding: 0px 20px 0px 0px;
+}
