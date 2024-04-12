@@ -238,12 +238,13 @@ function AddStation() {
         if (addFormFormik.values.productName !== "") {
             console.log("Fetcing Stations:",addFormFormik.values.productName)
             
-            const productName = addFormFormik.values.productName.value
+            const productName = addFormFormik.values.productName.value;
+            var paramArr=[]
             const getProductParametersPromise = getOneProductAllParameters(productName)
             getProductParametersPromise.then(async (result) => {
                 console.log(result)
                 // const parameters[] = await result.map((product) => {id:product.id,parameterName:product.parameter})
-                var paramArr=[]
+                
                 // parameters.forEach((param)=>{
                 //     paramArr.push(param.trim().replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, ' '))
                 // })
@@ -260,7 +261,7 @@ function AddStation() {
                 //productParameters.splice(0,productParameters.length)
                 //setProductParameters([...productParameters])
         
-                setProductParameters(paramArr)
+                // setProductParameters(paramArr)
                 console.log(paramArr)
             }).catch((err) => {console.log(err); })
             const getProductStationsPromise =getProductStationsDetails(productName)
@@ -308,25 +309,51 @@ function AddStation() {
                     if(info.station_parameters !== null)
                     {
                     const arr = info.station_parameters.split(',').map(item => item.trim());
-                    console.log(arr);
-                    arr.forEach(async item=>{
+                    // console.log(arr);
+
+                    arr.forEach( item=>{
                         // console.log("Item:", item, typeof item); 
-                        const matchedParamIndex = await productParameters.findIndex(param => {
-                            // console.log("Inside findIndex"); 
-                            // console.log("ParameterName:", param && param.parameterName, typeof (param && param.parameterName)); // Log the value of param.parameterName
-                            return param.parameterName === item;
-                        });
-                        console.log("MatchedParamIndex:", matchedParamIndex);
-                        if (matchedParamIndex !== -1) {
-                            const matchedParam = productParameters[matchedParamIndex];
-                            const updatedParam = { ...matchedParam, assigned: 1 }; 
-                            // console.log(updatedParam);// Create a new object with updated assigned value
-                            productParameters[matchedParamIndex] = updatedParam;
-                        }
+                        // const matchedParamIndex = productParameters.findIndex(param => {
+                        //     console.log("Inside findIndex"); 
+                        //     console.log("ParameterName:", param && param.parameterName, typeof (param && param.parameterName)); // Log the value of param.parameterName
+                        //     return param.parameterName === item;
+                        // });
+
+                        assigned.push(item);
+                        // console.log("MatchedParamIndex:", matchedParamIndex);
+                        // if (matchedParamIndex !== -1) {
+                        //     const matchedParam = productParameters[matchedParamIndex];
+                        //     const updatedParam = { ...matchedParam, assigned: 1 }; 
+                        //     // console.log(updatedParam);// Create a new object with updated assigned value
+                        //     productParameters[matchedParamIndex] = updatedParam;
+                        // }
                        
                     })
                     }
                 })
+
+                var newParamArr=[];
+                paramArr.forEach(param=>{
+                    const matchedId = assigned.find(p => p === param.parameterName);
+
+                    if(matchedId)
+                    {
+                    const matchedParam = param;
+                    const updatedParam = { ...matchedParam, assigned: 1 };
+                    console.log(updatedParam.assigned);
+                    newParamArr.push(updatedParam);
+                    }
+                    else{
+                        newParamArr.push(param);
+                    }
+                    
+                })
+
+                // productParameters.splice(0,productParameters.length);
+                // setProductParameters([...productParameters]);
+                setProductParameters(newParamArr);
+                console.log(newParamArr);
+                console.log(productParameters);
                 console.log(result);
                 console.log("Stations Data Done")
                 setStationInfo(temp)
@@ -982,7 +1009,7 @@ function AddStation() {
         <h3>Compulsory Parameters</h3>
         {productParameters.map((parameter, index) => (
             parameter.compulsory === 1 && (
-                <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor: parameter.assigned === 1 ? 'black' : 'white' ,height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:parameter.assigned === 1 ? 'green' : 'purple', borderRadius:10}}>
+                <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor: parameter.assigned === 1 ? 'green' : 'white' ,height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:'purple', borderRadius:10}}>
                     <input
                         type="checkbox"
                         checked={addFormFormik.values.stationParameter.some((data)=> data.parameterName === parameter.parameterName)}
@@ -1002,7 +1029,7 @@ function AddStation() {
         <h3>Non-Compulsory Parameters</h3>
         {productParameters.map((parameter, index) => (
             parameter.compulsory === 0 && (
-                <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor: parameter.assigned === 1 ? 'rgba(0, 255, 0, 0.2) !important' : 'white',height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:"purple", borderRadius:10}}>
+                <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor: parameter.assigned === 1 ? 'green' : 'white',height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:"purple", borderRadius:10}}>
                     <input
                         type="checkbox"
                         checked={addFormFormik.values.stationParameter.some((data)=> data.parameterName === parameter.parameterName)}
