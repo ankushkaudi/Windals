@@ -37,6 +37,7 @@ function WindalsNav() {
     //   toast.error(err.msg)
     // })
   }, [])
+  console.log(workerAccess);
 
   const redirectToHome = () => {
     //navigate(`/LandingPage`)
@@ -100,6 +101,10 @@ function WindalsNav() {
                 {(workerAccess[21] === "1") && <NavDropdown.Item as={Link} to={`/TrackingUserReport`} state={{ userInfo }}>User Tracking</NavDropdown.Item>}
                 {(workerAccess[22] === "1") && <NavDropdown.Item as={Link} to={`/CompletedJobsReport`} state={{ userInfo }}>Completed Jobs</NavDropdown.Item>}
                 {(workerAccess[23] === "1") && <NavDropdown.Item as={Link} to={`/LoginLog`} state={{ userInfo }}>Log</NavDropdown.Item>}
+                {(workerAccess[24] === "1") && <NavDropdown.Item as={Link} to={`/ScrapJobsReport`} state={{ userInfo }}>Scrap Jobs</NavDropdown.Item>}
+                {(workerAccess[24] === "1") && <NavDropdown.Item as={Link} to={`/TargetVsActualJobQntReport`} state={{ userInfo }}>Target Vs Actual Job Qnt</NavDropdown.Item>}
+                {(workerAccess[24] === "1") && <NavDropdown.Item as={Link} to={`/TargetVsActualJobCycleTimeReport`} state={{ userInfo }}>Target Vs Actual Job Cycle Time</NavDropdown.Item>}
+                
                 {/* <Nav.Link href={`/ProductReport`} state={{ userInfo }}>Product</Nav.Link>
                 <Nav.Link href={`/JobReport`} state={{ userInfo }}>Job</Nav.Link>
                 <Nav.Link href={`/DailyProductionReport`} state={{ userInfo }}>Daily Production</Nav.Link>

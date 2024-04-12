@@ -70,6 +70,9 @@ function App() {
         <Route path='/DailyProductionReport' element={<DailyProductionReport />} />
         <Route path='/TrackingUserReport' element={<DailyProductionReport />} />
         <Route path='/CompletedJobsReport' element={<DailyProductionReport />} />
+        <Route path='/ScrapJobsReport' element={<DailyProductionReport />} />
+        <Route path='/TargetVsActualJobQntReport' element={<DailyProductionReport />} />
+        <Route path='/TargetVsActualJobCycleTimeReport' element={<DailyProductionReport />} />
         <Route path='/' element={<LoginPage />} />
 
         <Route path='/:userName/SupervisorDash' element={<Supervisor/>}/>

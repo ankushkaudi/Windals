@@ -3,7 +3,7 @@ import { insertInProductMaster, getInfoFromProductMaster, deleteProductMasterPar
 import {insertIntoStationMaster,deleteFromStationMaster,getInfoFromStationMaster,getOneStationFromStationMaster,getOneStationOneProductFromStationMaster,updateStationMaster,getStationNamesFromStationMaster, getStationNamesForOneProduct,addNextStationInStationMaster,mobileGetOneStationOneProductFromStationMaster,getStationAndMachinesInfo, copyStationNamesFromOneProduct, getProductStationsDetails, deleteStation} from "../Controllers/stationMasterController.js";
 import {insertInProductyyyy} from "../Controllers/productyyyyController.js";
 import {insertIntoEmployeeMaster,getAllFromEmployee,getOneFromEmployee,updateEmployeeMaster, deleteFromEmployeeMaster, resetPassword} from "../Controllers/employeeMasterController.js"
-import {insertInStationyyyyFirst, insertInStationyyyyFirstNextStation,updateInStationyyyy,jobsAtStation,stationJobsStats,workAtStationInDay,getJobesSubmitedAtStation,productReport,jobDetailsReport,insertInStationyyyySameStation,jobsAtReworkStation,updateInStationyyyyrework,undoJobs,updateJobStatus,dailyProductionReport,trackingUserReport,completedJobsReport} from "../Controllers/stationyyyyController.js"
+import {insertInStationyyyyFirst, insertInStationyyyyFirstNextStation,updateInStationyyyy,jobsAtStation,stationJobsStats,workAtStationInDay,getJobesSubmitedAtStation,productReport,jobDetailsReport,insertInStationyyyySameStation,jobsAtReworkStation,updateInStationyyyyrework,undoJobs,updateJobStatus,dailyProductionReport,trackingUserReport,completedJobsReport,scrapJobsReport,targetVsActualJobQntReport,targetVsActualJobCycleTimeReport} from "../Controllers/stationyyyyController.js"
 import { login,getNamesFromEmployeeMaster,logOut } from "../Controllers/employeeMasterController.js";
 import {getOneWorkerStation, insertIntoStationAllocation,getStationAllocated, getStationAllocatedToProduct, copyStationAllocation} from "../Controllers/stationAllocationController.js"
 import {getAllFromShiftConfig,insertIntoShiftConfig,deleteFromShiftConfig,updateShiftConfig,getActiveShiftNames,getCurrentShift} from "../Controllers/shiftConfigController.js";
@@ -74,6 +74,9 @@ router.route("/getProductParameterById").get(getProductParameterById)
 router.route("/GetDailyProductionReport").get(dailyProductionReport)
 router.route("/GetTrackingUserReport").get(trackingUserReport) 
 router.route("/GetCompletedJobsReport").get(completedJobsReport)
+router.route("/GetScrapJobsReport").get(scrapJobsReport)
+router.route("/GetTargetVsActualJobQntReport").get(targetVsActualJobQntReport)
+router.route("/GetTargetVsActualJobCycleTimeReport").get(targetVsActualJobCycleTimeReport)
 router.route("/getProductStationParameters").get(getProductStationParameters)
 router.route('/verifyLogin').get(auth,(req,res)=>{
     const {userId} = req.body.token
