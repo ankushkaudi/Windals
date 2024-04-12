@@ -3,7 +3,7 @@ import { Button, Form, Modal, Alert } from 'react-bootstrap';
 import './addStation.css'
 import { useState} from "react";
 import { Formik, useFormik, FormikProvider } from "formik";
-import { addStation, deleteStation, getOneProductAllParameters, getOneStation, getOneStationOneProduct, getProductNames, updateStation, getAllStationNames, deleteMachine, copyProductStations, getInfoFromStationMasterWithMachine,getProductStationsDetails, stationMachines, getOneProductOneParameter, getProductParameterById } from "../../helper/helper";
+import { addStation, deleteStation, getOneProductAllParameters, getOneStation, getOneStationOneProduct, getProductNames, updateStation, getAllStationNames, deleteMachine, copyProductStations, getInfoFromStationMasterWithMachine,getProductStationsDetails, stationMachines, getOneProductOneParameter, getProductParameterById} from "../../helper/helper";
 import toast, { Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit, faX } from '@fortawesome/free-solid-svg-icons';
@@ -237,6 +237,7 @@ function AddStation() {
     useEffect(() => {
         if (addFormFormik.values.productName !== "") {
             console.log("Fetcing Stations:",addFormFormik.values.productName)
+            
             const productName = addFormFormik.values.productName.value
             const getProductParametersPromise = getOneProductAllParameters(productName)
             getProductParametersPromise.then(async (result) => {
@@ -249,7 +250,9 @@ function AddStation() {
                 result.forEach((paramater)=>{
                     var temp={
                         id:paramater.id,
-                        parameterName:paramater.parameter.trim().replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, ' ')
+                        parameterName:paramater.parameter.trim().replace(/(\r\n|\n|\r)/gm, "").replace(/\s+/g, ' '),
+                        compulsory:paramater.compulsory,
+                        assigned:0
                     }
                     paramArr.push(temp);
                 })
@@ -258,6 +261,7 @@ function AddStation() {
                 //setProductParameters([...productParameters])
         
                 setProductParameters(paramArr)
+                console.log(paramArr)
             }).catch((err) => {console.log(err); })
             const getProductStationsPromise =getProductStationsDetails(productName)
             getProductStationsPromise.then(async (result) => {
@@ -279,9 +283,9 @@ function AddStation() {
                 //     dailyCount: machine.daily_count,
                 //     productPerHour: machine.product_per_hour,
                 // }));
-
+                var assigned=[];
                 result.forEach(data=>{
-                    console.log(data)
+                    // console.log(data)
                     const info={
                         sr_no:srNo,
                         station_name:data.station_name,
@@ -299,8 +303,31 @@ function AddStation() {
                         parameterIds:data.parameterIds
                     }
                     temp.push(info);
-                    srNo+=1
+                    srNo+=1;
+                    // console.log(info.station_parameters);
+                    if(info.station_parameters !== null)
+                    {
+                    const arr = info.station_parameters.split(',').map(item => item.trim());
+                    console.log(arr);
+                    arr.forEach(async item=>{
+                        // console.log("Item:", item, typeof item); 
+                        const matchedParamIndex = await productParameters.findIndex(param => {
+                            // console.log("Inside findIndex"); 
+                            // console.log("ParameterName:", param && param.parameterName, typeof (param && param.parameterName)); // Log the value of param.parameterName
+                            return param.parameterName === item;
+                        });
+                        console.log("MatchedParamIndex:", matchedParamIndex);
+                        if (matchedParamIndex !== -1) {
+                            const matchedParam = productParameters[matchedParamIndex];
+                            const updatedParam = { ...matchedParam, assigned: 1 }; 
+                            // console.log(updatedParam);// Create a new object with updated assigned value
+                            productParameters[matchedParamIndex] = updatedParam;
+                        }
+                       
+                    })
+                    }
                 })
+                console.log(result);
                 console.log("Stations Data Done")
                 setStationInfo(temp)
             }).catch((err) => {console.log(err); })
@@ -311,6 +338,7 @@ function AddStation() {
         handleReportTypeChangeForAdd(addFormFormik.values.reportType)
     }, [addFormFormik.values.reportType])
 
+    
     // useEffect(()  => {
     //     if (addFormFormik.values.productName !== "") {
     //         console.log("Fetching info:");
@@ -934,7 +962,7 @@ function AddStation() {
                                 (addFormFormik.values.reportType === "1" && Array.isArray(addFormFormik.values.stationParameter)) &&
                                 <>
                                     <h3>Select Parameters</h3>
-                                    {productParameters.map((parameter, index) => (
+                                    {/* {productParameters.map((parameter, index) => (
                                         <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor:'white',height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:"purple", borderRadius:10}}>
                                                 <input
                                                     type="checkbox"
@@ -948,7 +976,50 @@ function AddStation() {
                                             {addFormFormik.errors.stationParameter && addFormFormik.touched.stationParameter ? (
                                                 <Alert variant="danger" className="error-message">{addFormFormik.errors.stationParameter}</Alert>) : null}
                                         </div>
-                                    ))}
+                                    ))} */}
+                                    <div>
+    <div>
+        <h3>Compulsory Parameters</h3>
+        {productParameters.map((parameter, index) => (
+            parameter.compulsory === 1 && (
+                <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor: parameter.assigned === 1 ? 'black' : 'white' ,height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:parameter.assigned === 1 ? 'green' : 'purple', borderRadius:10}}>
+                    <input
+                        type="checkbox"
+                        checked={addFormFormik.values.stationParameter.some((data)=> data.parameterName === parameter.parameterName)}
+                        onChange={() => handleParameterTickBoxChangeForAdd(parameter)}
+                    />
+                    <label className="d-flex align-self-center" style={{marginLeft:10}}>
+                        {parameter.parameterName}
+                    </label>
+                    {addFormFormik.errors.stationParameter && addFormFormik.touched.stationParameter ? (
+                        <Alert variant="danger" className="error-message">{addFormFormik.errors.stationParameter}</Alert>
+                    ) : null}
+                </div>
+            )
+        ))}
+    </div>
+    <div>
+        <h3>Non-Compulsory Parameters</h3>
+        {productParameters.map((parameter, index) => (
+            parameter.compulsory === 0 && (
+                <div key={index} className="d-flex justify-content-start align-self-center" style={{marginTop:1, alignContent:'flex-start',backgroundColor: parameter.assigned === 1 ? 'rgba(0, 255, 0, 0.2) !important' : 'white',height:35,paddingLeft:10,borderStyle:"solid",borderWidth:2,borderColor:"purple", borderRadius:10}}>
+                    <input
+                        type="checkbox"
+                        checked={addFormFormik.values.stationParameter.some((data)=> data.parameterName === parameter.parameterName)}
+                        onChange={() => handleParameterTickBoxChangeForAdd(parameter)}
+                    />
+                    <label className="d-flex align-self-center" style={{marginLeft:10}}>
+                        {parameter.parameterName}
+                    </label>
+                    {addFormFormik.errors.stationParameter && addFormFormik.touched.stationParameter ? (
+                        <Alert variant="danger" className="error-message">{addFormFormik.errors.stationParameter}</Alert>
+                    ) : null}
+                </div>
+            )
+        ))}
+    </div>
+</div>
+
                                 </>
                             }
                         </>
