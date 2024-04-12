@@ -743,6 +743,37 @@ export async function GetCompletedJobsReport(value){
         return Promise.reject(error.response.data)
     }
 }
+
+export async function GetScrapJobsReport(value){
+    try {
+        const {data,status} = await axios.get(`${proxy}api/GetScrapJobsReport`,{params:{value}})
+        return Promise.resolve(data)
+    } catch (error) {
+        console.log({err:error})
+        return Promise.reject(error.response.data)
+    }
+} 
+
+export async function GetTargetVsActualJobQntReport(value){
+    try {
+        const {data,status} = await axios.get(`${proxy}api/GetTargetVsActualJobQntReport`,{params:{value}})
+        return Promise.resolve(data)
+    } catch (error) {
+        console.log({err:error})
+        return Promise.reject(error.response.data)
+    }
+}
+
+export async function GetTargetVsActualJobCycleTimeReport(value){
+    try {
+        const {data,status} = await axios.get(`${proxy}api/GetTargetVsActualJobCycleTimeReport`,{params:{value}})
+        return Promise.resolve(data)
+    } catch (error) {
+        console.log({err:error})
+        return Promise.reject(error.response.data)
+    }
+}
+
 //added by SJT on 09-03-2024
 export async function getProductStationParameters(productName,stationId){
     try {
