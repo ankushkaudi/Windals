@@ -593,4 +593,60 @@ async function completedJobsReport(req,res) {
     }
 }
 
-export {insertInStationyyyyFirst, insertInStationyyyyFirstNextStation,updateInStationyyyy, jobsAtStation,stationJobsStats,workAtStationInDay,getJobesSubmitedAtStation,productReport,jobDetailsReport,jobsAtReworkStation,insertInStationyyyySameStation,updateInStationyyyyrework,undoJobs,updateJobStatus,dailyProductionReport,trackingUserReport,completedJobsReport};
+async function scrapJobsReport(req,res) {
+    const {fromDate,toDate} = req.query.value
+    const formattedFromDate = fromDate + ' 00:00:00';
+    const formattedToDate = toDate + ' 23:59:59';
+    try {
+        const searchQuery = "SELECT sm.station_name, sy.product_name, py.job_name , Date(sy.intime) as date FROM station_yyyy as sy JOIN station_master as sm ON sy.station_id = sm.station_id JOIN productyyyy as py  ON sy.job_id = py.job_id WHERE status = -3 "
+        const searchResult = await db.promise().query(searchQuery,[formattedFromDate,formattedToDate])
+        console.log(searchResult);
+        if(searchResult[0].length === 0)
+            return res.status(401).send({msg:"There is no data between the selected dates."})
+        else
+            res.status(200).send(searchResult[0]) 
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).send({ msg: `Internal server error: ${err}` });
+    }
+}
+
+async function targetVsActualJobQntReport(req,res) {
+    const {fromDate,toDate} = req.query.value
+    const formattedFromDate = fromDate + ' 00:00:00';
+    const formattedToDate = toDate + ' 23:59:59';
+    try {
+        const searchQuery = "SELECT Date(intime) AS date, em.user_name, sm.station_name, sy.product_name, sm.daily_count AS targetQty, COUNT(status) as actualQty, ABS(sm.daily_count - COUNT(status)) AS VarianceQty FROM station_yyyy AS sy JOIN station_master AS sm ON sy.station_id = sm.station_id JOIN employee_master AS em ON sy.employee_id = em.employee_id  WHERE status = 1 AND sy.intime BETWEEN ? AND ? GROUP BY product_name, sy.station_id, em.employee_id, Date(intime) "
+        const searchResult = await db.promise().query(searchQuery,[formattedFromDate,formattedToDate])
+        console.log(searchResult);
+        if(searchResult[0].length === 0)
+            return res.status(401).send({msg:"There is no data between the selected dates."})
+        else
+            res.status(200).send(searchResult[0]) 
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).send({ msg: `Internal server error: ${err}` });
+    }
+}
+
+async function targetVsActualJobCycleTimeReport(req,res) {
+    const {fromDate,toDate} = req.query.value
+    const formattedFromDate = fromDate + ' 00:00:00';
+    const formattedToDate = toDate + ' 23:59:59';
+    try {
+        const searchQuery = "SELECT Date(intime) AS date, em.user_name, sm.station_name, sy.product_name, py.job_name AS heat_code, sm.cycle_time AS targetCycleTime, TIMEDIFF(sy.out_time, sy.intime) AS actualCycleTime, TIME_TO_SEC(TIMEDIFF(sy.out_time, sy.intime)) - sm.cycle_time AS varianceCycleTime FROM station_yyyy AS sy JOIN station_master AS sm ON sy.station_id = sm.station_id JOIN employee_master AS em ON sy.employee_id = em.employee_id JOIN productyyyy AS py ON py.job_id = sy.job_id WHERE status = 1 AND sy.intime BETWEEN ? AND ? GROUP BY product_name, sy.station_id, em.employee_id, Date(intime), py.job_id, sy.out_time, sy.intime"
+        const searchResult = await db.promise().query(searchQuery,[formattedFromDate,formattedToDate])
+        console.log(searchResult);
+        if(searchResult[0].length === 0)
+            return res.status(401).send({msg:"There is no data between the selected dates."})
+        else
+            res.status(200).send(searchResult[0]) 
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).send({ msg: `Internal server error: ${err}` });
+    }
+}
+
+
+
+export {insertInStationyyyyFirst, insertInStationyyyyFirstNextStation,updateInStationyyyy, jobsAtStation,stationJobsStats,workAtStationInDay,getJobesSubmitedAtStation,productReport,jobDetailsReport,jobsAtReworkStation,insertInStationyyyySameStation,updateInStationyyyyrework,undoJobs,updateJobStatus,dailyProductionReport,trackingUserReport,completedJobsReport,scrapJobsReport,targetVsActualJobQntReport,targetVsActualJobCycleTimeReport};

@@ -5,7 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 import Footer from '../footer';
-import { GetCompletedJobsReport, GetDailyProductionReport, GetTrackingUserReport } from '../../helper/helper';
+import { GetCompletedJobsReport, GetDailyProductionReport, GetTrackingUserReport, GetScrapJobsReport, GetTargetVsActualJobQntReport,GetTargetVsActualJobCycleTimeReport } from '../../helper/helper';
 import { Button, Form, Alert, Row } from 'react-bootstrap';
 import './dailyProductionReport.css'
 import {useLocation } from 'react-router-dom';
@@ -46,9 +46,40 @@ function DailyProductionReport() {
     { label: 'Model No/Product name', field: 'product_name' },
   ]
 
+  const scrapJobsColumns = [
+    { label: 'Station Name', field: 'station_name' },
+    { label: 'Model No/Product name', field: 'product_name' },
+    { label: 'Job Name', field: 'job_name' },
+    { label: 'Date', field: 'date' },
+  ]
+
+  const targetVsActualJobQntReportColumns = [
+    { label: 'Date', field: 'date' },
+    { label: 'User Name', field: 'user_name' },
+    { label: 'Station Name', field: 'station_name' },
+    { label: 'Model No/Product name', field: 'product_name' },
+    { label: 'Target Qnt', field: 'targetQty' },
+    { label: 'Actual Qnt', field: 'actualQty' },
+    { label: 'Variance Qnt', field: 'VarianceQty' },
+  ]
+
+  const targetVsActualJobCycleTimeReportColumns = [
+    { label: 'Date', field: 'date' },
+    { label: 'User Name', field: 'user_name' },
+    { label: 'Station Name', field: 'station_name' },
+    { label: 'Model No/Product name', field: 'product_name' },
+    { label: 'Job Heat Code', field: 'heat_code' },
+    { label: 'Target Cycle Time', field: 'targetCycleTime' },
+    { label: 'Actual Cycle Time', field: 'actualCycleTime' },
+    { label: 'Variance Cycle Time', field: 'varianceCycleTime' },
+  ]
+
   const [dailyProductionData,setDailyProductionData] = useState("") 
   const [userTrackingData,setUserTrackingData] = useState("")
   const [completedJobsData,setCompletedJobsData] = useState("")
+  const [scrapJobsData,setScrapJobsData] = useState("")
+  const [targetVsActualJobQntData,setTargetVsActualJobQntData] = useState("")
+  const [targetVsActualJobCycleTimeData,setTargetVsActualJobCycleTimeData] = useState("")
 
   const validationSchema = Yup.object().shape({
     formDate : Yup.date().required("Select from-Date"),
@@ -121,6 +152,59 @@ function DailyProductionReport() {
                     }
                 )
             }
+            else if(endOfUrl==="ScrapJobsReport")
+            {
+                const getScrapJobsReportPromise = GetScrapJobsReport(values)
+                toast.promise(
+                    getScrapJobsReportPromise,
+                    {
+                        loading: "Getting the data, please wait.",
+                        success: (result) =>{
+                            console.log(result);
+                            setScrapJobsData(result)
+                        },
+                        error: (err) => {
+                            return err.msg
+                        } 
+                    }
+                )
+            }
+            else if(endOfUrl==="TargetVsActualJobQntReport")
+            {
+                // console.log("this");
+                const getTargetVsActualJobQntReportPromise = GetTargetVsActualJobQntReport(values)
+                toast.promise(
+                    getTargetVsActualJobQntReportPromise,
+                    {
+                        loading: "Getting the data, please wait.",
+                        success: (result) =>{
+                            console.log(result);
+                            setTargetVsActualJobQntData(result)
+                        },
+                        error: (err) => {
+                            return err.msg
+                        } 
+                    }
+                )
+            }
+            else if(endOfUrl==="TargetVsActualJobCycleTimeReport")
+            {
+                // console.log("this");
+                const getTargetVsActualJobCycleTimeReportPromise = GetTargetVsActualJobCycleTimeReport(values)
+                toast.promise(
+                    getTargetVsActualJobCycleTimeReportPromise,
+                    {
+                        loading: "Getting the data, please wait.",
+                        success: (result) =>{
+                            console.log(result);
+                            setTargetVsActualJobCycleTimeData(result)
+                        },
+                        error: (err) => {
+                            return err.msg
+                        } 
+                    }
+                )
+            }
         }
     })
   
@@ -164,6 +248,9 @@ function DailyProductionReport() {
         { endOfUrl==="DailyProductionReport" && dailyProductionData.length!==0 && <Table columns={dailyProductionColumns} data={dailyProductionData} /> }
         { endOfUrl==="TrackingUserReport" && userTrackingData.length!==0 && <Table columns={userTrackingColumns} data={userTrackingData} /> }
         { endOfUrl==="CompletedJobsReport" && completedJobsData.length!==0 && <Table columns={completedJobsColumns} data={completedJobsData} /> }
+        { endOfUrl==="ScrapJobsReport" && scrapJobsData.length!==0 && <Table columns={scrapJobsColumns} data={scrapJobsData} /> }
+        { endOfUrl==="TargetVsActualJobQntReport" && targetVsActualJobQntData.length!==0 && <Table columns={targetVsActualJobQntReportColumns} data={targetVsActualJobQntData} /> }
+        { endOfUrl==="TargetVsActualJobCycleTimeReport" && targetVsActualJobCycleTimeData.length!==0 && <Table columns={targetVsActualJobCycleTimeReportColumns} data={targetVsActualJobCycleTimeData} /> }
         
         <Footer />
     </>
